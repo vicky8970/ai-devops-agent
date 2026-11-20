@@ -3,13 +3,13 @@ main = "src/index.ts"
 compatibility_date = "2024-11-20"
 
 [vars]
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "qwen/qwen3.8-27b"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "ai-devops-agent"
 database_id = "fbf02a1d-debd-4552-99d5-059aa0eee359"
 migrations_dir = "migrations"
-            
+
 [observability]
 enabled = true
