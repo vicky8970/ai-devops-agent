@@ -1,4 +1,4 @@
-import { refactorWithWorkersAi } from "./ai";
+import { refactorWithGroq } from "./ai";
 import { getLatestRepo, logAction, saveRepoConnection } from "./db";
 import {
   createBranch,
@@ -95,7 +95,7 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
 
       for (const file of files) {
         const current = await fetchFile(githubEnv, file.path);
-        const updated = await refactorWithWorkersAi(env, current.text);
+        const updated = await refactorWithGroq(env, current.text);
         if (updated.trim() === current.text.trim()) {
           continue;
         }

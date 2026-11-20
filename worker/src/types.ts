@@ -1,9 +1,9 @@
 export interface Env {
   DB: D1Database;
-  AI: Ai;
   GITHUB_TOKEN: string;
   GITHUB_REPO?: string;
-  AI_MODEL?: string;
+  GROQ_API_KEY?: string;
+  GROQ_MODEL?: string;
 }
 
 export interface GitHubContent {
@@ -27,6 +27,10 @@ export interface FixAndPrPayload {
   pr_body?: string;
 }
 
-export interface WorkersAiResponse {
-  response?: string;
+export interface GroqResponse {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+  }>;
 }

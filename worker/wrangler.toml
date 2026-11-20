@@ -3,10 +3,7 @@ main = "src/index.ts"
 compatibility_date = "2024-11-20"
 
 [vars]
-AI_MODEL = "@cf/meta/llama-3.1-8b-instruct"
-
-[ai]
-binding = "AI"
+GROQ_MODEL = "llama-3.3-70b-versatile"
 
 [[d1_databases]]
 binding = "DB"

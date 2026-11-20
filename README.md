@@ -6,24 +6,24 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 ![Cloudflare D1](https://img.shields.io/badge/Cloudflare_D1-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
-![Workers AI](https://img.shields.io/badge/Workers_AI-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) 
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) 
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-AI DevOps Agent is a TypeScript application that integrates with GitHub and Cloudflare Workers AI to refactor Python repositories and create pull requests.
+AI DevOps Agent is a TypeScript application that integrates with GitHub and Groq to refactor source repositories and create pull requests.
 
 ---
 
 ## About Project
 - **Connects to GitHub**: Securely links to your repository using a personal access token.
-- **Fetches Python files**: Reads source code directly from your repo.
-- **AI Refactoring & Bug Fixing**: Uses Cloudflare Workers AI to:
+- **Fetches source files**: Reads supported source code directly from your repo.
+- **AI Refactoring & Bug Fixing**: Uses Groq to:
   - Refactor messy code
   - Fix broken logic when tests fail
-  - Ensure valid Python output (sanitized before saving)
+  - Ensure valid source output (sanitized before saving)
 - **Validation**: Reports that repository checks should run through GitHub Actions.
 - **Pull Requests**: Automatically commits changes and raises a PR back to your repo.
 - **Frontend Dashboard**: React UI to connect repos, trigger checks and view PR status.
@@ -34,14 +34,14 @@ AI DevOps Agent is a TypeScript application that integrates with GitHub and Clou
 
 ### Cloudflare Worker API
 - **`worker/src/github.ts`** handles GitHub REST API calls.
-- **`worker/src/ai.ts`** calls Workers AI and sanitizes generated code.
+- **`worker/src/ai.ts`** calls Groq and sanitizes generated code.
 - **`worker/src/index.ts`** exposes repository connection, file listing, and fix-and-PR routes.
 - **`worker/src/db.ts`** stores connections and action logs in D1.
 
 ### AI Integration
-- **Cloudflare Workers AI**
+- **Groq API**
   - Input: raw code + optional test failure feedback  
-  - Output: corrected/refactored Python code only  
+  - Output: corrected/refactored source code only
   - Sanitization ensures only valid code is saved  
 
 ### Frontend (React + Vite)
@@ -85,7 +85,7 @@ npm run dev
 
 - Trigger Code Check to refactor, format and fix broken code.
 
-- The Worker uses Workers AI to refactor Python files through GitHub.
+- The Worker uses Groq to refactor supported source files through GitHub.
 
 - Repository tests and formatting should run in GitHub Actions.
 
@@ -118,7 +118,7 @@ MIT License – free to use, modify and distribute.
 ## TypeScript and Cloudflare deployment
 
 The production architecture uses React/TypeScript on Cloudflare Pages and a
-TypeScript Cloudflare Worker API backed by D1 and Workers AI.
+TypeScript Cloudflare Worker API backed by D1 and Groq.
 
 ### Local development
 
@@ -150,9 +150,10 @@ Set `VITE_API_URL` in `frontend/.env.local` to the local Worker URL, usually
    npx wrangler secret put GITHUB_REPO
    ```
 
-4. Enable Workers AI for the account and deploy the API:
+4. Configure the Groq API key and deploy the API:
 
    ```bash
+   npx wrangler secret put GROQ_API_KEY
    cd worker
    npx wrangler deploy
    ```
@@ -161,7 +162,7 @@ Set `VITE_API_URL` in `frontend/.env.local` to the local Worker URL, usually
    `npm run build` as its build command, `dist` as its output directory, and
    `VITE_API_URL` as the deployed Worker URL.
 
-The Worker uses GitHub’s REST API and Workers AI directly. It does not run
+The Worker uses GitHub’s REST API and Groq directly. It does not run
 local `pytest`, Black, Flake8, or Ollama processes. Add a GitHub Actions
 workflow to run those repository-specific checks before merging generated
 pull requests.
