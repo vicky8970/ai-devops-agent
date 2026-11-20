@@ -1,0 +1,18 @@
+name = "ai-devops-agent-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-20"
+
+[vars]
+AI_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+
+[ai]
+binding = "AI"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ai-devops-agent"
+database_id = "fbf02a1d-debd-4552-99d5-059aa0eee359"
+migrations_dir = "migrations"
+            
+[observability]
+enabled = true

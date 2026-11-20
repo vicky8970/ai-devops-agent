@@ -1,13 +1,16 @@
-import RepoConnect from "./components/RepoConnect.jsx";
-import CodeCheck from "./components/CodeCheck.jsx";
-import PRStatus from "./components/PRStatus.jsx";
+import RepoConnect from "./components/RepoConnect";
+import CodeCheck from "./components/CodeCheck";
+import PRStatus from "./components/PRStatus";
 
 export default function App() {
   return (
     <div className="app-container">
       <header className="header">
         <h1 className="title">Autonomous DevOps Intelligence</h1>
-        <p className="subtitle">Your intelligent automation assistant for code cleanup, GitHub commits, and seamless PR generation.</p>
+        <p className="subtitle">
+          Intelligent automation for code cleanup, GitHub commits, and pull
+          requests.
+        </p>
       </header>
 
       <main className="grid">

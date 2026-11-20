@@ -3,32 +3,28 @@
 
 ## 🛠️ Tech Stack
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) 
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white) 
-![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white) 
-![Black](https://img.shields.io/badge/Black-000000?style=for-the-badge&logo=python&logoColor=white) 
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) 
-![Ollama](https://img.shields.io/badge/Ollama-3AAFA9?style=for-the-badge&logo=ai&logoColor=white) 
-![CodeLlama](https://img.shields.io/badge/CodeLlama-8C6AF1?style=for-the-badge&logo=ai&logoColor=white) 
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Cloudflare D1](https://img.shields.io/badge/Cloudflare_D1-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Workers AI](https://img.shields.io/badge/Workers_AI-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) 
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) 
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=323330) 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) 
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-AI DevOps Agent is an intelligent automation tool that seamlessly integrates with GitHub repositories to streamline the entire development workflow. It leverages AI to detect and repair broken code, refactor for readability and style and validate changes through automated testing. Once verified, it raises clean, well‑structured pull requests, all with minimal human intervention.
+AI DevOps Agent is a TypeScript application that integrates with GitHub and Cloudflare Workers AI to refactor Python repositories and create pull requests.
 
 ---
 
 ## About Project
 - **Connects to GitHub**: Securely links to your repository using a personal access token.
 - **Fetches Python files**: Reads source code directly from your repo.
-- **AI Refactoring & Bug Fixing**: Uses Ollama + CodeLlama to:
+- **AI Refactoring & Bug Fixing**: Uses Cloudflare Workers AI to:
   - Refactor messy code
   - Fix broken logic when tests fail
   - Ensure valid Python output (sanitized before saving)
-- **Formatting**: Runs **Black** to enforce consistent style.
-- **Testing**: Executes **pytest** to validate correctness.
+- **Validation**: Reports that repository checks should run through GitHub Actions.
 - **Pull Requests**: Automatically commits changes and raises a PR back to your repo.
 - **Frontend Dashboard**: React UI to connect repos, trigger checks and view PR status.
 
@@ -36,30 +32,14 @@ AI DevOps Agent is an intelligent automation tool that seamlessly integrates wit
 
 ## 🛠️ How the Code Works
 
-### Backend (FastAPI + Python)
-- **`services/github_client.py`**  
-  Handles GitHub API calls: branch creation, file updates, PR creation, file listing.
-
-- **`services/fixers.py`**  
-  Runs Black, pytest, and AI refactoring. Sanitizes Ollama output to strip markdown fences and explanations.
-
-- **`routes/code.py`**  
-  FastAPI route `/fix-and-pr`:
-  1. Clones repo locally
-  2. Iterates over Python files
-  3. Calls AI to refactor/fix code
-  4. Runs Black + pytest
-  5. If tests fail, re-prompts AI with feedback
-  6. Commits changes and raises PR
-
-- **`lint.py`**  
-  Provides **static analysis and linting checks** before code is committed.  
-  - Ensures code follows PEP8 and project style rules  
-  - Detects unused imports, variables, and potential bugs  
-  - Acts as a **pre‑commit quality gate** before AI fixes and PR creation  
+### Cloudflare Worker API
+- **`worker/src/github.ts`** handles GitHub REST API calls.
+- **`worker/src/ai.ts`** calls Workers AI and sanitizes generated code.
+- **`worker/src/index.ts`** exposes repository connection, file listing, and fix-and-PR routes.
+- **`worker/src/db.ts`** stores connections and action logs in D1.
 
 ### AI Integration
-- **Ollama + CodeLlama**  
+- **Cloudflare Workers AI**
   - Input: raw code + optional test failure feedback  
   - Output: corrected/refactored Python code only  
   - Sanitization ensures only valid code is saved  
@@ -75,8 +55,7 @@ AI DevOps Agent is an intelligent automation tool that seamlessly integrates wit
 ## ✨ Features
 - 🔗 GitHub Integration
 - 🤖 AI-Powered Code Fixes
-- 🛠️ Automated Formatting (Black)
-- ✅ Testing Automation (pytest)
+- ☁️ Serverless Cloudflare deployment
 - 📦 Pull Request Creation
 - 🎨 Futuristic Dashboard UI
 
@@ -85,15 +64,17 @@ AI DevOps Agent is an intelligent automation tool that seamlessly integrates wit
 ## ⚙️ Installation
 
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/sakshisemalti/ai-devops-agent.git
-cd frosttech
+cd ai-devops-agent
 
-# Backend setup
-pip install -r requirements.txt
-uvicorn main:app --reload
+# Frontend
+cd frontend
+npm install
+npm run dev
 
-# Frontend setup
+# Worker API (in another terminal)
+cd ../worker
 npm install
 npm run dev
 ```
@@ -104,9 +85,9 @@ npm run dev
 
 - Trigger Code Check to refactor, format and fix broken code.
 
-- Backend runs Black and pytest automatically.
+- The Worker uses Workers AI to refactor Python files through GitHub.
 
-- If tests fail, AI re-prompts with feedback to fix the code.
+- Repository tests and formatting should run in GitHub Actions.
 
 - Review and merge the auto-generated PR.
 
@@ -133,4 +114,55 @@ Please ensure your code passes Black formatting and pytest before submitting.
 
 ## License
 MIT License – free to use, modify and distribute.
+
+## TypeScript and Cloudflare deployment
+
+The production architecture uses React/TypeScript on Cloudflare Pages and a
+TypeScript Cloudflare Worker API backed by D1 and Workers AI.
+
+### Local development
+
+```bash
+cd frontend
+npm install
+npm run typecheck
+npm run build
+
+cd ../worker
+npm install
+npm run typecheck
+npm run dev
+```
+
+Set `VITE_API_URL` in `frontend/.env.local` to the local Worker URL, usually
+`http://localhost:8787`.
+
+### Cloudflare setup
+
+1. Create a D1 database named `ai-devops-agent` and replace the placeholder
+   `database_id` in `worker/wrangler.toml`.
+2. Apply the schema with
+   `npx wrangler d1 migrations apply ai-devops-agent --remote`.
+3. Configure the Worker secrets:
+
+   ```bash
+   npx wrangler secret put GITHUB_TOKEN
+   npx wrangler secret put GITHUB_REPO
+   ```
+
+4. Enable Workers AI for the account and deploy the API:
+
+   ```bash
+   cd worker
+   npx wrangler deploy
+   ```
+
+5. Configure the Pages project to use `frontend` as its root directory,
+   `npm run build` as its build command, `dist` as its output directory, and
+   `VITE_API_URL` as the deployed Worker URL.
+
+The Worker uses GitHub’s REST API and Workers AI directly. It does not run
+local `pytest`, Black, Flake8, or Ollama processes. Add a GitHub Actions
+workflow to run those repository-specific checks before merging generated
+pull requests.
 
