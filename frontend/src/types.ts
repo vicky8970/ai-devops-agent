@@ -20,6 +20,10 @@ export interface PullRequest {
 
 export interface FixAndPrResponse {
   changed_files: number;
+  skipped_files?: Array<{
+    path: string;
+    reason: string;
+  }>;
   pr: PullRequest;
   validation: {
     status: "not_run" | "passed" | "failed";

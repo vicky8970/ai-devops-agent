@@ -74,6 +74,12 @@ export default function PRStatus() {
       {result && (
         <div style={{ marginTop: "1rem" }}>
           <p>Changed files: {result.changed_files}</p>
+          {result.skipped_files && result.skipped_files.length > 0 && (
+            <p>
+              Skipped files:{" "}
+              {result.skipped_files.map((file) => file.path).join(", ")}
+            </p>
+          )}
           <p>Validation: {result.validation.message}</p>
           {result.pr.url ? (
             <p>

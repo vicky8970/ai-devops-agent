@@ -51,7 +51,15 @@ function normalizeRepoName(value: string): string {
 }
 
 function isSupportedSourceFile(path: string): boolean {
-  return /\.(ts|tsx|js|jsx|json|css|html|md)$/i.test(path);
+  const fileName = path.split("/").pop()?.toLowerCase() ?? "";
+  if (
+    fileName === "package-lock.json" ||
+    fileName === "pnpm-lock.yaml" ||
+    fileName === "yarn.lock"
+  ) {
+    return false;
+  }
+  return /\.(ts|tsx|js|jsx|css|html)$/i.test(path);
 }
 
 async function handleRequest(request: Request, env: Env): Promise<Response> {
@@ -91,10 +99,18 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
       await createBranch(githubEnv, payload.branch);
       const files = (await listRepositoryFiles(githubEnv, payload.directory))
         .filter((file) => isSupportedSourceFile(file.path));
+      const skippedFiles: Array<{ path: string; reason: string }> = [];
       let changed = 0;
 
       for (const file of files) {
         const current = await fetchFile(githubEnv, file.path);
+        if (current.text.length > 16000) {
+          skippedFiles.push({
+            path: file.path,
+            reason: "File is too large for the configured Groq request limit.",
+          });
+          continue;
+        }
         const updated = await refactorWithGroq(env, current.text);
         if (updated.trim() === current.text.trim()) {
           continue;
@@ -121,6 +137,7 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
           : { error: "No changes detected, PR not created" };
       const response = {
         changed_files: changed,
+        skipped_files: skippedFiles,
         pr,
         validation: {
           status: "not_run" as const,
