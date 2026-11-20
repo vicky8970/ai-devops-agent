@@ -63,7 +63,6 @@ AI DevOps Agent is a TypeScript application that integrates with GitHub and Groq
 
 ## ⚙️ Installation
 
-```bash
 # Clone the repository
 git clone https://github.com/sakshisemalti/ai-devops-agent.git
 cd ai-devops-agent
@@ -77,7 +76,6 @@ npm run dev
 cd ../worker
 npm install
 npm run dev
-```
 ---
 
 ## Usage
@@ -94,7 +92,7 @@ npm run dev
 ---
 
 ## Contributing
-Contributions are welcome!This project is open for changes.
+Contributions are welcome! This project is open for changes.
 
 - Fork the repository
 
@@ -108,7 +106,7 @@ Contributions are welcome!This project is open for changes.
   
 Please ensure your code passes Black formatting and pytest before submitting.
 
-⚠️ Note: Only high-quality PRs that follow project standards and improve functionality will be accepted. Low-effort or untested contributions will be reject
+⚠️ Note: Only high-quality PRs that follow project standards and improve functionality will be accepted. Low-effort or untested contributions will be rejected.
 
 ---
 
@@ -122,7 +120,6 @@ TypeScript Cloudflare Worker API backed by D1 and Groq.
 
 ### Local development
 
-```bash
 cd frontend
 npm install
 npm run typecheck
@@ -132,7 +129,6 @@ cd ../worker
 npm install
 npm run typecheck
 npm run dev
-```
 
 Set `VITE_API_URL` in `frontend/.env.local` to the local Worker URL, usually
 `http://localhost:8787`.
@@ -145,18 +141,14 @@ Set `VITE_API_URL` in `frontend/.env.local` to the local Worker URL, usually
    `npx wrangler d1 migrations apply ai-devops-agent --remote`.
 3. Configure the Worker secrets:
 
-   ```bash
    npx wrangler secret put GITHUB_TOKEN
    npx wrangler secret put GITHUB_REPO
-   ```
 
 4. Configure the Groq API key and deploy the API:
 
-   ```bash
    npx wrangler secret put GROQ_API_KEY
    cd worker
    npx wrangler deploy
-   ```
 
 5. Configure the Pages project to use `frontend` as its root directory,
    `npm run build` as its build command, `dist` as its output directory, and
@@ -166,4 +158,3 @@ The Worker uses GitHub’s REST API and Groq directly. It does not run
 local `pytest`, Black, Flake8, or Ollama processes. Add a GitHub Actions
 workflow to run those repository-specific checks before merging generated
 pull requests.
-
