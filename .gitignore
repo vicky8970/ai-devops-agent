@@ -10,6 +10,7 @@ build/
 
 # Local environment files
 .env
+.dev.vars
 .env.local
 .env.*.local
 
