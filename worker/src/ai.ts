@@ -20,14 +20,14 @@ export async function refactorWithWorkersAi(
   feedback?: string,
 ): Promise<string> {
   const prompt = feedback
-    ? `Fix this Python code based on the test feedback below. Return only valid Python code, without markdown or explanations.
+    ? `Fix this source file based on the test feedback below. Return only valid source code, without markdown or explanations.
 
 Test feedback:
 ${feedback}
 
 Code:
 ${source}`
-    : `Refactor and fix bugs in this Python code. Return only valid Python code, without markdown or explanations.
+    : `Refactor and fix bugs in this source file. Return only valid source code, without markdown or explanations.
 
 Code:
 ${source}`;

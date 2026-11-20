@@ -4,7 +4,7 @@ import {
   createBranch,
   createPullRequest,
   fetchFile,
-  listPythonFiles,
+  listRepositoryFiles,
   updateFile,
 } from "./github";
 import type { Env, FixAndPrPayload } from "./types";
@@ -50,6 +50,10 @@ function normalizeRepoName(value: string): string {
   return repo;
 }
 
+function isSupportedSourceFile(path: string): boolean {
+  return /\.(ts|tsx|js|jsx|json|css|html|md)$/i.test(path);
+}
+
 async function handleRequest(request: Request, env: Env): Promise<Response> {
   if (request.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -66,7 +70,7 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
 
     if (url.pathname === "/repo/files" && request.method === "GET") {
       const repo = await activeRepo(env);
-      const files = await listPythonFiles(
+      const files = await listRepositoryFiles(
         repoEnv(env, repo),
         url.searchParams.get("directory") ?? "",
         url.searchParams.get("ref") ?? undefined,
@@ -85,7 +89,8 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
       const repo = await activeRepo(env);
       const githubEnv = repoEnv(env, repo);
       await createBranch(githubEnv, payload.branch);
-      const files = await listPythonFiles(githubEnv, payload.directory);
+      const files = (await listRepositoryFiles(githubEnv, payload.directory))
+        .filter((file) => isSupportedSourceFile(file.path));
       let changed = 0;
 
       for (const file of files) {

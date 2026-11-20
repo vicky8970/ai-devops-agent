@@ -37,7 +37,7 @@ export function repositoryName(env: Env): string {
   return env.GITHUB_REPO;
 }
 
-export async function listPythonFiles(
+export async function listRepositoryFiles(
   env: Env,
   directory = "",
   ref?: string,
@@ -58,7 +58,7 @@ export async function listPythonFiles(
     for (const content of contents) {
       if (content.type === "dir") {
         queue.push(content.path);
-      } else if (content.type === "file" && content.path.endsWith(".py")) {
+      } else if (content.type === "file") {
         files.push(content);
       }
     }
